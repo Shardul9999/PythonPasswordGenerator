@@ -7,30 +7,34 @@ letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
 numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
 
-nr_letters = random.randint(8, 10)
-nr_symbols = random.randint(2, 4)
-nr_numbers = random.randint(2, 4)
-
-password_list = []
-
-for char in range(nr_letters):
-  password_list.append(random.choice(letters))
-
-for char in range(nr_symbols):
-  password_list += random.choice(symbols)
-
-for char in range(nr_numbers):
-  password_list += random.choice(numbers)
-
-random.shuffle(password_list)
-
-password = ""
-for char in password_list:
-  password += char
+def generatePass():
+  pass_length = int(password_length_entry.get())
   
-pass_length = password_length_entry.get()
+  nr_letters = int(pass_length * 0.6)
+  nr_symbols = int(pass_length * 0.2)
+  nr_numbers = pass_length - (nr_letters + nr_symbols)
 
-print(f"Your password is: {password}")
+  password_list = []
+
+  for char in range(nr_letters):
+    password_list.append(random.choice(letters))
+
+  for char in range(nr_symbols):
+    password_list.append(random.choice(symbols))
+
+  for char in range(nr_numbers):
+    password_list.append(random.choice(numbers))
+
+  random.shuffle(password_list)
+
+  password = ""
+  for char in password_list:
+    password += char
+  
+  password_entry.delete(0, END)
+  password_entry.insert(0, password)
+
+#print(f"Your password is: {password}")
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
@@ -45,7 +49,7 @@ def save():
         is_okay = messagebox.askokcancel(title= website, message= f"Entered Details are : \nEmail: {email} "f"\nPassword: {password} \nSave or not?")
         
         with open("data.txt", "a") as Data_file:
-            Data_file.write(f"{website} | {email} | {password}")
+            Data_file.write(f"{website} | {email} | {password}\n")
             website_entry.delete(0,END)
             password_entry.delete(0,END)
         
@@ -89,7 +93,7 @@ password_entry = Entry(width=21)
 password_entry.grid(row=4, column=1, sticky="EW")
 
 # Buttons
-generate_password_button = Button(text="Generate Password") 
+generate_password_button = Button(text = "Generate Password", command=generatePass)
 generate_password_button.grid(row=4, column=2, sticky="EW")
 
 add_button = Button(text="Add", width=36, command=save)
